@@ -13,7 +13,10 @@ import {
   Award,
   Layers,
   X,
-  Wrench
+  Wrench,
+  GraduationCap,
+  Medal,
+  Globe
 } from 'lucide-react';
 import Scene from './components/Scene';
 import { RESUME_DATA } from './data';
@@ -35,7 +38,8 @@ const staggerContainer = {
 };
 
 const App = () => {
-  const [selectedImg, setSelectedImg] = useState<string | null>(null);
+  const [selectedImages, setSelectedImages] = useState<string[] | null>(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [firstName, ...lastNameParts] = RESUME_DATA.name.split(' ');
   const lastName = lastNameParts.join(' ');
 
@@ -155,6 +159,73 @@ const App = () => {
               ))}
             </div>
           </div>
+
+          {/* Additional Details */}
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+            gap: '2rem',
+            marginTop: '3rem',
+            borderTop: '1px solid rgba(255,255,255,0.1)',
+            paddingTop: '2rem'
+          }}>
+            {/* Certifications */}
+            <div>
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: 'var(--primary)', fontSize: '1.1rem' }}>
+                <Award size={20} /> Certifications
+              </h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {RESUME_DATA.certifications.map((c, i) => (
+                  <li key={i} style={{ fontSize: '0.95rem', color: 'var(--text-dim)', lineHeight: 1.4 }}>
+                    <span style={{ color: 'var(--primary)', marginRight: '0.5rem' }}>•</span> {c}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Achievements */}
+            <div>
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: 'var(--accent)', fontSize: '1.1rem' }}>
+                <Medal size={20} /> Extracurriculars
+              </h3>
+              <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {RESUME_DATA.achievements.map((a, i) => (
+                  <li key={i} style={{ fontSize: '0.95rem', color: 'var(--text-dim)', lineHeight: 1.4 }}>
+                    <span style={{ color: 'var(--accent)', marginRight: '0.5rem' }}>•</span> {a}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Languages */}
+            <div>
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: 'var(--secondary)', fontSize: '1.1rem' }}>
+                <Globe size={20} /> Spoken Languages
+              </h3>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+                {RESUME_DATA.spokenLanguages.map(lang => (
+                  <span key={lang} className="skill-tag" style={{ borderColor: 'var(--secondary)', color: 'white' }}>{lang}</span>
+                ))}
+              </div>
+            </div>
+
+            {/* Education */}
+            <div style={{ gridColumn: '1 / -1' }}>
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', color: 'var(--primary)', fontSize: '1.1rem' }}>
+                <GraduationCap size={20} /> Education
+              </h3>
+              <div style={{ display: 'grid', gap: '1rem', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))' }}>
+                {RESUME_DATA.education.map((edu, i) => (
+                  <div key={i} className="glass-panel" style={{ padding: '1.5rem', borderLeft: '3px solid var(--primary)' }}>
+                    <h4 style={{ color: 'white', fontSize: '1.05rem', marginBottom: '0.25rem' }}>{edu.institution}</h4>
+                    <p style={{ color: 'var(--text-dim)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>{edu.duration}</p>
+                    <p style={{ color: 'var(--accent)', fontSize: '0.95rem', fontWeight: 500 }}>{edu.degree}</p>
+                    <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.85rem', marginTop: '0.25rem' }}>{edu.score}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </motion.div>
       </section>
 
@@ -162,7 +233,7 @@ const App = () => {
       <section id="projects" className="section">
         <motion.div {...fadeInUp}>
           <h2 style={{ marginBottom: '1rem' }}>Featured <span className="gradient-text">Missions</span></h2>
-          <p style={{ color: 'var(--text-dim)', marginBottom: '3rem' }}>Deploying AI to solve critical challenges in agriculture and healthcare.</p>
+          <p style={{ color: 'var(--text-dim)', marginBottom: '3rem' }}>Deploying AI to solve critical challenges in agriculture, healthcare, IT automations, voice agents, and agentic workflows.</p>
         </motion.div>
 
         <motion.div
@@ -173,9 +244,12 @@ const App = () => {
         >
           {RESUME_DATA.projects.map((project: any) => (
             <motion.div key={project.id} variants={fadeInUp} className="glass-panel project-card">
-              {project.image && (
+              {project.image && (project.id === 'email-agent' || project.id === 'feedback-system' || project.id === 'lakehouse-article') && (
                 <div
-                  onClick={() => setSelectedImg(project.image)}
+                  onClick={() => {
+                    setSelectedImages(project.images || [project.image]);
+                    setCurrentImageIndex(0);
+                  }}
                   style={{ width: '100%', height: '180px', borderRadius: '12px', overflow: 'hidden', marginBottom: '1.5rem', border: '1px solid rgba(255,255,255,0.1)', cursor: 'zoom-in' }}
                 >
                   <img src={project.image} alt={project.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
@@ -208,13 +282,26 @@ const App = () => {
               </div>
               <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
                 <a
-                  href={project.link}
+                  href={project.link !== '#' ? project.link : undefined}
                   className="nav-link"
                   target={project.link !== '#' ? "_blank" : undefined}
                   rel="noopener noreferrer"
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', opacity: 1, color: project.type === 'primary' ? 'var(--primary)' : 'var(--accent)' }}
+                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', opacity: 1, color: project.type === 'primary' ? 'var(--primary)' : 'var(--accent)', cursor: 'pointer' }}
+                  onClick={(e) => {
+                    if (project.images && project.images.length > 0) {
+                      e.preventDefault();
+                      setSelectedImages(project.images);
+                      setCurrentImageIndex(0);
+                    } else if (project.image) {
+                      e.preventDefault();
+                      setSelectedImages([project.image]);
+                      setCurrentImageIndex(0);
+                    } else if (project.link === '#') {
+                      e.preventDefault();
+                    }
+                  }}
                 >
-                  {project.type === 'primary' ? 'Explore Architecture' : 'View Case Study'} <ExternalLink size={14} />
+                  Explore <ExternalLink size={14} />
                 </a>
                 {project.videoDemo && (
                   <a
@@ -318,12 +405,12 @@ const App = () => {
 
       {/* Image Modal */}
       <AnimatePresence>
-        {selectedImg && (
+        {selectedImages && selectedImages.length > 0 && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedImg(null)}
+            onClick={() => setSelectedImages(null)}
             style={{
               position: 'fixed',
               top: 0,
@@ -342,6 +429,7 @@ const App = () => {
             <motion.button
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
+              onClick={(e) => { e.stopPropagation(); setSelectedImages(null); }}
               style={{
                 position: 'fixed',
                 top: '2rem',
@@ -351,16 +439,39 @@ const App = () => {
                 borderRadius: '50%',
                 padding: '0.5rem',
                 color: 'white',
-                cursor: 'pointer'
+                cursor: 'pointer',
+                zIndex: 2001
               }}
             >
               <X size={24} />
             </motion.button>
 
+            {selectedImages.length > 1 && (
+              <>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setCurrentImageIndex((prev) => (prev > 0 ? prev - 1 : selectedImages.length - 1)); }}
+                  style={{ position: 'absolute', left: '2rem', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', padding: '1rem', color: 'white', cursor: 'pointer', zIndex: 2001, fontSize: '1.5rem' }}
+                >
+                  &#8592;
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); setCurrentImageIndex((prev) => (prev < selectedImages.length - 1 ? prev + 1 : 0)); }}
+                  style={{ position: 'absolute', right: '2rem', background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', padding: '1rem', color: 'white', cursor: 'pointer', zIndex: 2001, fontSize: '1.5rem' }}
+                >
+                  &#8594;
+                </button>
+                <div style={{ position: 'absolute', bottom: '2rem', color: 'white', background: 'rgba(0,0,0,0.5)', padding: '0.5rem 1rem', borderRadius: '20px', zIndex: 2001 }}>
+                  {currentImageIndex + 1} / {selectedImages.length}
+                </div>
+              </>
+            )}
+
             <motion.img
+              key={currentImageIndex}
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              src={selectedImg}
+              transition={{ duration: 0.3 }}
+              src={selectedImages[currentImageIndex]}
               alt="Workflow Full View"
               style={{
                 maxWidth: '90%',
