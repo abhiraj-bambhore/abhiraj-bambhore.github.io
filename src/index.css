@@ -23,8 +23,12 @@
   --font-body: 'Inter', sans-serif;
   --glow: 0 0 20px rgba(92, 234, 219, 0.3);
 }
+* {
+  box-sizing: border-box;
+}
 
 body {
+  margin: 0;
   background-color: var(--bg-dark);
   color: var(--text-main);
   font-family: var(--font-body);
