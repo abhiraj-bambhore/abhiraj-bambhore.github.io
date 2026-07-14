@@ -242,6 +242,7 @@ const App = () => {
           whileInView="whileInView"
           className="projects-grid"
         >
+          {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           {RESUME_DATA.projects.map((project: any) => (
             <motion.div key={project.id} variants={fadeInUp} className="glass-panel project-card">
               {project.image && (project.id === 'email-agent' || project.id === 'feedback-system' || project.id === 'lakehouse-article') && (
@@ -364,6 +365,7 @@ const App = () => {
                 <h3>Tools</h3>
               </div>
               <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                 {(RESUME_DATA.skills as any).tools.map((skill: string) => (
                   <span key={skill} className="skill-tag">{skill}</span>
                 ))}
