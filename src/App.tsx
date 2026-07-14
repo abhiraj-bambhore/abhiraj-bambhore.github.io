@@ -286,7 +286,7 @@ const App = () => {
                   <button
                     className="nav-link"
                     style={{ background: 'none', border: 'none', padding: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', opacity: 1, color: project.type === 'primary' ? 'var(--primary)' : 'var(--accent)', cursor: 'pointer' }}
-                    onClick={(e) => {
+                    onClick={() => {
                       if (project.images && project.images.length > 0) {
                         setSelectedImages(project.images);
                         setCurrentImageIndex(0);
