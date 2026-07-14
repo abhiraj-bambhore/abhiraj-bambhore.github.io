@@ -254,7 +254,7 @@ h4 {
   left: 0;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
   padding: 1.5rem 5%;
   background: rgba(8, 11, 17, 0.8);

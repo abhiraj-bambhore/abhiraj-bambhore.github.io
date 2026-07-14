@@ -3,21 +3,21 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Points, PointMaterial, Float, Sphere, MeshDistortMaterial } from '@react-three/drei';
 import * as THREE from 'three';
 
-function StarField() {
-    const ref = useRef<any>(null);
+const SPHERE_POINTS = (() => {
+    const points = new Float32Array(3000 * 3);
+    for (let i = 0; i < 3000; i++) {
+        const r = 25;
+        const theta = 2 * Math.PI * Math.random();
+        const phi = Math.acos(2 * Math.random() - 1);
+        points[i * 3] = r * Math.sin(phi) * Math.cos(theta);
+        points[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+        points[i * 3 + 2] = r * Math.cos(phi);
+    }
+    return points;
+})();
 
-    const sphere = useMemo(() => {
-        const points = new Float32Array(3000 * 3);
-        for (let i = 0; i < 3000; i++) {
-            const r = 25;
-            const theta = 2 * Math.PI * Math.random();
-            const phi = Math.acos(2 * Math.random() - 1);
-            points[i * 3] = r * Math.sin(phi) * Math.cos(theta);
-            points[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
-            points[i * 3 + 2] = r * Math.cos(phi);
-        }
-        return points;
-    }, []);
+function StarField() {
+    const ref = useRef<THREE.Points>(null);
 
     useFrame((_state, delta) => {
         if (ref.current) {
@@ -28,7 +28,7 @@ function StarField() {
 
     return (
         <group rotation={[0, 0, Math.PI / 4]}>
-            <Points ref={ref} positions={sphere} stride={3} frustumCulled={false}>
+            <Points ref={ref} positions={SPHERE_POINTS} stride={3} frustumCulled={false}>
                 <PointMaterial
                     transparent
                     color="#5ceadb"
@@ -44,7 +44,7 @@ function StarField() {
 }
 
 function MovingGrid() {
-    const gridRef = useRef<any>(null);
+    const gridRef = useRef<THREE.Group>(null);
 
     useFrame((state) => {
         const t = state.clock.getElapsedTime();
