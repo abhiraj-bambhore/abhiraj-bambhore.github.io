@@ -113,7 +113,7 @@ export const RESUME_DATA = {
             status: "TECHNICAL ARTICLE",
             description: "A comprehensive guide on modern data architectures, comparing Data Lakes, Data Warehouses, and Data Lakehouses with their respective use cases and architectures.",
             tags: ["Data Architecture", "Technical Writing", "Big Data"],
-            link: "https://medium.com/@abhirajbambhore/difference-between-data-lakehouse-data-lake-and-data-warehouse-b590807b5a88",
+            link: "https://lakehouse-article.vercel.app/",
             type: "accent",
             image: "/datalake1.jpeg",
             images: ["/datalake1.jpeg"]
