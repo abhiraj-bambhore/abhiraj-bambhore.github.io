@@ -77,7 +77,7 @@ const App = () => {
               <span className="gradient-text">{lastName}</span>
             </h1>
 
-            <p style={{ fontSize: '0.92rem', color: 'rgba(255,255,255,0.6)', marginBottom: '3rem', maxWidth: '600px', lineHeight: '1.6' }}>
+            <p style={{ fontSize: '0.92rem', color: 'white', marginBottom: '3rem', maxWidth: '600px', lineHeight: '1.6' }}>
               {RESUME_DATA.summary}
             </p>
 
