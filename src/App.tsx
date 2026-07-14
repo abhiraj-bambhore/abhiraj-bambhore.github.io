@@ -282,28 +282,35 @@ const App = () => {
                 ))}
               </div>
               <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <a
-                  href={project.link !== '#' ? project.link : undefined}
-                  className="nav-link"
-                  target={project.link !== '#' ? "_blank" : undefined}
-                  rel="noopener noreferrer"
-                  style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', opacity: 1, color: project.type === 'primary' ? 'var(--primary)' : 'var(--accent)', cursor: 'pointer' }}
-                  onClick={(e) => {
-                    if (project.images && project.images.length > 0) {
-                      e.preventDefault();
-                      setSelectedImages(project.images);
-                      setCurrentImageIndex(0);
-                    } else if (project.image) {
-                      e.preventDefault();
-                      setSelectedImages([project.image]);
-                      setCurrentImageIndex(0);
-                    } else if (project.link === '#') {
-                      e.preventDefault();
-                    }
-                  }}
-                >
-                  Explore <ExternalLink size={14} />
-                </a>
+                {(project.image || (project.images && project.images.length > 0)) && (
+                  <button
+                    className="nav-link"
+                    style={{ background: 'none', border: 'none', padding: 0, display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', opacity: 1, color: project.type === 'primary' ? 'var(--primary)' : 'var(--accent)', cursor: 'pointer' }}
+                    onClick={(e) => {
+                      if (project.images && project.images.length > 0) {
+                        setSelectedImages(project.images);
+                        setCurrentImageIndex(0);
+                      } else if (project.image) {
+                        setSelectedImages([project.image]);
+                        setCurrentImageIndex(0);
+                      }
+                    }}
+                  >
+                    View Images <ExternalLink size={14} />
+                  </button>
+                )}
+                
+                {project.link !== '#' && (
+                  <a
+                    href={project.link}
+                    className="nav-link"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.8rem', opacity: 1, color: project.type === 'primary' ? 'var(--primary)' : 'var(--accent)', cursor: 'pointer' }}
+                  >
+                    Explore <ExternalLink size={14} />
+                  </a>
+                )}
                 {project.videoDemo && (
                   <a
                     href={project.videoDemo}
